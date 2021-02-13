@@ -1,17 +1,17 @@
 <template>
   <base-card>
-    <h2>Find your coach</h2>
+    <h2>Find a stream to watch</h2>
     <span class="filter-option">
       <input type="checkbox" id="frontend" checked @change="setFilter" />
-      <label for="frontend">Frontend</label>
+      <label for="music">Music</label>
     </span>
     <span class="filter-option">
       <input type="checkbox" id="backend" checked @change="setFilter" />
-      <label for="backend">Backend</label>
+      <label for="games">Games</label>
     </span>
     <span class="filter-option">
       <input type="checkbox" id="career" checked @change="setFilter" />
-      <label for="career">Career</label>
+      <label for="other">Other</label>
     </span>
   </base-card>
 </template>

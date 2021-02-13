@@ -2,46 +2,93 @@ export default {
   namespaced: true,
   state() {
     return {
-      coaches: [
+      lastFetch: null,
+      streams: [
         {
           id: 'c1',
-          firstName: 'Maximilian',
-          lastName: 'Schwarzmüller',
-          areas: ['frontend', 'backend', 'career'],
-          description:
-            "I'm Maximilian and I've worked as a freelance web developer for years. Let me help you become a developer as well!",
-          hourlyRate: 30
+          streamerHandle: 'Spracto',
+          streamName: 'Destiny 2!',
+          areas: ['Games', 'Music'],
+          description: 'Playing some Destiny 2, come hang out!'
         },
         {
           id: 'c2',
-          firstName: 'Julie',
-          lastName: 'Jones',
-          areas: ['frontend', 'career'],
-          description:
-            'I am Julie and as a senior developer in a big tech company, I can help you get your first job or progress in your current role.',
-          hourlyRate: 30
+          streamerHandle: 'Harley The DJ',
+          streamName: 'Dubstep dayz',
+          areas: ['Music'],
+          description: 'Blasting the latest dubstep tunes'
         }
       ]
     };
   },
   mutations: {
     saveCoach(state, data) {
-      console.log('data: ', data);
       state.coaches.push(data);
+    },
+    setCoaches(state, payload) {
+      state.coaches = payload;
+    },
+    setFetchTimestamp(state) {
+      state.lastFetch = new Date().getTime();
     }
   },
   actions: {
-    saveCoachData(ctx, data) {
-      console.log('action', data);
+    async saveCoachData(ctx, data) {
+      const userId = ctx.rootGetters.userId;
       const newCoach = {
-        id: ctx.rootGetters.userId,
         firstName: data.first,
         lastName: data.last,
         description: data.desc,
         hourlyRate: data.rate,
         areas: data.areas
       };
-      ctx.commit('saveCoach', newCoach);
+
+      const token = ctx.rootGetters.token;
+      const res = await fetch(
+        `https://vue3-http-requests-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${token}`,
+        {
+          method: 'PUT',
+          body: JSON.stringify(newCoach)
+        }
+      );
+
+      // resData = await res.json();
+      if (!res.ok) {
+        // error ...
+      }
+      ctx.commit('saveCoach', {
+        ...newCoach,
+        id: userId
+      });
+    },
+    async loadCoaches(ctx, payload) {
+      if (!payload.forceRefresh && !ctx.getters.shouldUpdate) {
+        return;
+      }
+
+      const res = await fetch(
+        'https://vue3-http-requests-default-rtdb.firebaseio.com/coaches.json'
+      );
+      const resData = await res.json();
+      if (!res.ok) {
+        // error ...
+        const error = new Error(resData.message || 'Failed to fetch!');
+        throw error;
+      }
+      const coaches = [];
+      for (const key in resData) {
+        const coach = {
+          id: key,
+          firstName: resData[key].firstName,
+          lastName: resData[key].lastName,
+          description: resData[key].description,
+          hourlyRate: resData[key].hourlyRate,
+          areas: resData[key].areas
+        };
+        coaches.push(coach);
+      }
+      ctx.commit('setCoaches', coaches);
+      ctx.commit('setFetchTimestamp');
     }
   },
   getters: {
@@ -58,6 +105,14 @@ export default {
       const coaches = getters.coaches;
       const userId = rootGetters.userId;
       return coaches.some(coach => coach.id === userId);
+    },
+    shouldUpdate(state) {
+      const lastFetch = state.lastFetch;
+      if (!lastFetch) {
+        return true;
+      }
+      const currentTimeStamp = new Date().getTime();
+      return (currentTimeStamp - lastFetch) / 1000 > 60;
     }
   }
 };

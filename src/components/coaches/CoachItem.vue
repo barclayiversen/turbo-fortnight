@@ -1,6 +1,7 @@
 <template>
   <li>
     <h3>{{ fullName }}</h3>
+    <h3>{{ streamName }}</h3>
     <h4>${{ hourlyRate }}/hour</h4>
     <div>
       <base-badge
@@ -29,7 +30,7 @@ export default {
       return this.firstName + ' ' + this.lastName;
     },
     coachContactLink() {
-      return this.$route.path + '/' + this.id + '/contact';
+      return this.$route.path + '/' + this.id;
     },
     coachDetailLink() {
       return this.$route.path + '/' + this.id;

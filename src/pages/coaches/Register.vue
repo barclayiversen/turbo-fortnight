@@ -16,7 +16,6 @@ export default {
   },
   methods: {
     saveData(data) {
-      console.log('data in reg', data);
       this.$store.dispatch('coaches/saveCoachData', data);
       this.$router.replace('/coaches');
     }
