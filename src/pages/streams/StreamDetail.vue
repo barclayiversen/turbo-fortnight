@@ -2,17 +2,16 @@
   <div>
     <section>
       <base-card>
-        <h2>{{ fullName }}</h2>
-        <h3>$ {{ rate }}/hour</h3>
+        <h2>{{ streamerHandle }}</h2>
+        <h3>{{ streamName }}</h3>
       </base-card>
     </section>
     <section>
-      <base-card>
-        <header>
+       <base-card>
+        <video-player :options="videoOptions"></video-player>
+
+      <!--  <header>
           <h2>Contact now!</h2>
-          <!-- <base-button @click="hideButton" link :to="contactLink">
-            Contact
-          </base-button> -->
           <base-button @click="hideButton">
             Contact
           </base-button>
@@ -38,11 +37,8 @@
           <div class="actions">
             <base-button>Send Message</base-button>
           </div>
-        </form>
+        </form> -->
       </base-card>
-      <!-- <base-card> -->
-      <!-- <router-view @loaded="hideButton"></router-view> -->
-      <!-- </base-card> -->
     </section>
     <section>
       <base-card>
@@ -60,7 +56,13 @@
 </template>
 
 <script>
+import 'video.js/dist/video-js.css';
+import VideoPlayer from "@/components/streams/VideoPlayer.vue";
+
 export default {
+  components: {
+    VideoPlayer
+  },
   props: ['id'],
   data() {
     return {
@@ -68,12 +70,25 @@ export default {
       formOpen: false,
       email: '',
       message: '',
-      formIsValid: true
+      formIsValid: true,
+      videoOptions: {
+        autoplay: true,
+        controls: true,
+        sources: [{
+          src:
+            "http://localhost:8000/destiny2.mp4",
+          type: 
+            "video/mp4"
+        }]
+      }
     };
   },
   computed: {
-    fullName() {
-      return this.selectedCoach.firstName + ' ' + this.selectedCoach.lastName;
+    streamerHandle() {
+      return this.selectedCoach.streamerHandle
+    },
+    streamName() {
+      return this.selectedCoach.streamName;
     },
     areas() {
       return this.selectedCoach.areas;
@@ -115,7 +130,7 @@ export default {
     this.selectedCoach = this.$store.getters['streams/streams'].find(
       coach => coach.id === this.id
     );
-  }
+  },
 };
 </script>
 
