@@ -1,47 +1,16 @@
 <template>
   <div>
     <section>
+       <base-video-card>
+        <video-player :options="videoOptions"></video-player>
+        <div class="chat"></div>
+      </base-video-card>
+    </section>
+    <section>
       <base-card>
         <h2>{{ streamerHandle }}</h2>
         <h3>{{ streamName }}</h3>
-      </base-card>
-    </section>
-    <section>
-       <base-card>
-        <video-player :options="videoOptions"></video-player>
-
-      <!--  <header>
-          <h2>Contact now!</h2>
-          <base-button @click="hideButton">
-            Contact
-          </base-button>
-        </header>
-        <form @submit.prevent="submitForm" v-if="formOpen">
-          <div class="form-control">
-            <label for="email">Email</label>
-            <input type="email" id="email" v-model.trim="email" />
-          </div>
-          <div class="form-control">
-            <label for="message">Message</label>
-            <textarea
-              name="message"
-              id="message"
-              cols="30"
-              rows="5"
-              v-model.trim="message"
-            ></textarea>
-          </div>
-          <p v-if="!formIsValid" class="errors">
-            Please enter a valid email and non-empty message
-          </p>
-          <div class="actions">
-            <base-button>Send Message</base-button>
-          </div>
-        </form> -->
-      </base-card>
-    </section>
-    <section>
-      <base-card>
+        <p>{{ description }}</p>
         <base-badge
           v-for="area in areas"
           :key="area"
@@ -49,7 +18,6 @@
           :title="area"
         >
         </base-badge>
-        <p>{{ description }}</p>
       </base-card>
     </section>
   </div>
@@ -72,7 +40,9 @@ export default {
       message: '',
       formIsValid: true,
       videoOptions: {
-        autoplay: true,
+        height: "600%",
+        width: "1000%",
+        autoplay: false,
         controls: true,
         sources: [{
           src:
@@ -135,6 +105,11 @@ export default {
 </script>
 
 <style scoped>
+.chat {
+  height: 100%;
+  width: 33%;
+  background-color: #3d008d;
+}
 form {
   margin: 1rem;
   border: 1px solid #ccc;

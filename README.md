@@ -1,1 +1,4 @@
-main-prj-01-starting-setup
+# TODO
+
+1. make video player div responsive 
+2. add chat collapse button

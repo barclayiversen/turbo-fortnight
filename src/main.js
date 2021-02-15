@@ -6,6 +6,7 @@ import BaseCard from './components/ui/BaseCard.vue';
 import BaseButton from './components/ui/BaseButton.vue';
 import BaseBadge from './components/ui/BaseBadge.vue';
 import BaseSpinner from './components/ui/BaseSpinner.vue';
+import BaseVideoCard from './components/ui/BaseVideoCard.vue';
 // import BaseDialog from './components/ui/BaseDialog.vue';
 
 const BaseDialog = defineAsyncComponent(() =>
@@ -21,4 +22,5 @@ app.component('base-card', BaseCard);
 app.component('base-badge', BaseBadge);
 app.component('base-spinner', BaseSpinner);
 app.component('base-dialog', BaseDialog);
+app.component('base-video-card', BaseVideoCard);
 app.mount('#app');
