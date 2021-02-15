@@ -1,8 +1,8 @@
 <template>
   <li>
-    <h3>{{ fullName }}</h3>
+    <h3>{{ streamerHandle }}</h3>
     <h3>{{ streamName }}</h3>
-    <h4>${{ hourlyRate }}/hour</h4>
+    <h4>{{ description }}</h4>
     <div>
       <base-badge
         v-for="area in areas"
@@ -12,11 +12,11 @@
       ></base-badge>
     </div>
     <div class="actions">
-      <base-button class="outline" link :to="coachContactLink">
+      <!-- <base-button class="outline" link :to="coachContactLink">
         Contact
-      </base-button>
+      </base-button> -->
       <base-button link :to="coachDetailLink">
-        Details
+        Watch!
       </base-button>
     </div>
   </li>
@@ -24,11 +24,8 @@
 
 <script>
 export default {
-  props: ['id', 'firstName', 'lastName', 'hourlyRate', 'areas'],
+  props: ['id', 'streamerHandle', 'streamName', 'description', 'areas'],
   computed: {
-    fullName() {
-      return this.firstName + ' ' + this.lastName;
-    },
     coachContactLink() {
       return this.$route.path + '/' + this.id;
     },

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import CoachForm from '../../components/coaches/CoachForm.vue';
+import CoachForm from '../../components/streams/CoachForm.vue';
 export default {
   emits: [''],
   components: {
@@ -17,7 +17,7 @@ export default {
   methods: {
     saveData(data) {
       this.$store.dispatch('coaches/saveCoachData', data);
-      this.$router.replace('/coaches');
+      this.$router.replace('/streams');
     }
   }
 };

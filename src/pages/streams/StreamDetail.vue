@@ -105,14 +105,14 @@ export default {
         message: this.message,
         coachId: this.$route.params.id
       });
-      this.$router.replace('/coaches');
+      this.$router.replace('/streams');
     },
     hideButton() {
       this.formOpen = !this.formOpen;
     }
   },
   created() {
-    this.selectedCoach = this.$store.getters['coaches/coaches'].find(
+    this.selectedCoach = this.$store.getters['streams/streams'].find(
       coach => coach.id === this.id
     );
   }

@@ -9,11 +9,11 @@
     <section>
       <base-card>
         <div class="controls">
-          <base-button mode="outline" @click="loadCoaches(true)">
+          <base-button mode="outline" @click="loadStreams(true)">
             Refresh
           </base-button>
           <base-button v-if="!isLoggedIn" link to="/auth?redirect=register">
-            Login to register as a streamer!
+            Login to register as a streamer
           </base-button>
           <base-button
             v-if="isLoggedIn && !isCoach && !isLoading"
@@ -26,26 +26,27 @@
         <div v-if="isLoading">
           <base-spinner></base-spinner>
         </div>
-        <ul v-else-if="hasCoaches">
+        <ul v-else-if="hasStreams">
+          
           <coach-item
-            v-for="coach in filteredCoaches"
-            :key="coach.id"
-            :id="coach.id"
-            :first-name="coach.firstName"
-            :last-name="coach.lastName"
-            :hourly-rate="coach.hourlyRate"
-            :areas="coach.areas"
+            v-for="stream in filteredStreams"
+            :key="stream.id"
+            :id="stream.id"
+            :streamerHandle="stream.streamerHandle"
+            :streamName="stream.streamName"
+            :description="stream.description"
+            :areas="stream.areas"
           ></coach-item>
         </ul>
-        <h3 v-else>No coaches found</h3>
+        <h3 v-else>No streams found</h3>
       </base-card>
     </section>
   </div>
 </template>
 
 <script>
-import CoachItem from '../../components/coaches/CoachItem.vue';
-import CoachFilter from '../../components/coaches/CoachFilter.vue';
+import CoachItem from '../../components/streams/CoachItem.vue';
+import CoachFilter from '../../components/streams/CoachFilter.vue';
 
 export default {
   components: {
@@ -55,9 +56,9 @@ export default {
   data() {
     return {
       activeFilters: {
-        frontend: true,
-        backend: true,
-        career: true
+        music: true,
+        games: true,
+        other: true
       },
       isLoading: false,
       error: null
@@ -68,25 +69,25 @@ export default {
       return this.$store.getters.isAuthenticated;
     },
     isCoach() {
-      return this.$store.getters['coaches/isCoach'];
+      return this.$store.getters['streams/isCoach'];
     },
-    filteredCoaches() {
-      const coaches = this.$store.getters['coaches/coaches'];
-      return coaches.filter(coach => {
-        if (this.activeFilters.frontend && coach.areas.includes('frontend')) {
+    filteredStreams() {
+      const streams = this.$store.getters['streams/streams'];
+      return streams.filter(coach => {
+        if (this.activeFilters.music && coach.areas.includes('Music')) {
           return true;
         }
-        if (this.activeFilters.backend && coach.areas.includes('backend')) {
+        if (this.activeFilters.games && coach.areas.includes('Games')) {
           return true;
         }
-        if (this.activeFilters.career && coach.areas.includes('career')) {
+        if (this.activeFilters.other && coach.areas.includes('Other')) {
           return true;
         }
         return false;
       });
     },
-    hasCoaches() {
-      return !this.isLoading && this.$store.getters['coaches/hasCoaches'];
+    hasStreams() {
+      return !this.isLoading && this.$store.getters['streams/hasStreams'];
     }
   },
   methods: {
@@ -96,10 +97,10 @@ export default {
     setFilters(filters) {
       this.activeFilters = filters;
     },
-    async loadCoaches(refresh = false) {
+    async loadStreams(refresh = false) {
       this.isLoading = true;
       try {
-        await this.$store.dispatch('coaches/loadCoaches', {
+        await this.$store.dispatch('streams/loadStreams', {
           forceRefresh: refresh
         });
       } catch (error) {
@@ -109,7 +110,7 @@ export default {
     }
   },
   created() {
-    this.loadCoaches();
+    this.loadStreams();
   }
 };
 </script>

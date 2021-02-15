@@ -2,15 +2,15 @@
   <base-card>
     <h2>Find a stream to watch</h2>
     <span class="filter-option">
-      <input type="checkbox" id="frontend" checked @change="setFilter" />
+      <input type="checkbox" id="music" checked @change="setFilter" />
       <label for="music">Music</label>
     </span>
     <span class="filter-option">
-      <input type="checkbox" id="backend" checked @change="setFilter" />
+      <input type="checkbox" id="games" checked @change="setFilter" />
       <label for="games">Games</label>
     </span>
     <span class="filter-option">
-      <input type="checkbox" id="career" checked @change="setFilter" />
+      <input type="checkbox" id="other" checked @change="setFilter" />
       <label for="other">Other</label>
     </span>
   </base-card>
@@ -22,9 +22,9 @@ export default {
   data() {
     return {
       filters: {
-        frontend: true,
-        backend: true,
-        career: true
+        music: true,
+        games: true,
+        other: true
       }
     };
   },

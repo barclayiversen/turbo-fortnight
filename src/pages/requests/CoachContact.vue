@@ -48,7 +48,7 @@ export default {
         message: this.message,
         coachId: this.$route.params.id
       });
-      this.$router.replace('/coaches');
+      this.$router.replace('/streams');
     }
   }
 };

@@ -15,7 +15,7 @@ export default {
           id: 'c2',
           streamerHandle: 'Harley The DJ',
           streamName: 'Dubstep dayz',
-          areas: ['Music'],
+          areas: ['Music', 'Other'],
           description: 'Blasting the latest dubstep tunes'
         }
       ]
@@ -23,10 +23,12 @@ export default {
   },
   mutations: {
     saveCoach(state, data) {
-      state.coaches.push(data);
+      state.streams.push(data);
     },
-    setCoaches(state, payload) {
-      state.coaches = payload;
+    setStreams(state, payload) {
+      // state.streams = payload;
+      console.log("called setStreams", state, payload)
+
     },
     setFetchTimestamp(state) {
       state.lastFetch = new Date().getTime();
@@ -45,7 +47,7 @@ export default {
 
       const token = ctx.rootGetters.token;
       const res = await fetch(
-        `https://vue3-http-requests-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${token}`,
+        `https://vue3-http-requests-default-rtdb.firebaseio.com/streams/${userId}.json?auth=${token}`,
         {
           method: 'PUT',
           body: JSON.stringify(newCoach)
@@ -61,50 +63,52 @@ export default {
         id: userId
       });
     },
-    async loadCoaches(ctx, payload) {
-      if (!payload.forceRefresh && !ctx.getters.shouldUpdate) {
-        return;
-      }
+    async loadStreams(ctx, payload) {
+      console.log('loadstreams payload:', payload)
+      // if (!payload.forceRefresh && !ctx.getters.shouldUpdate) {
+      //   return;
+      // }
 
-      const res = await fetch(
-        'https://vue3-http-requests-default-rtdb.firebaseio.com/coaches.json'
-      );
-      const resData = await res.json();
-      if (!res.ok) {
-        // error ...
-        const error = new Error(resData.message || 'Failed to fetch!');
-        throw error;
-      }
-      const coaches = [];
-      for (const key in resData) {
-        const coach = {
-          id: key,
-          firstName: resData[key].firstName,
-          lastName: resData[key].lastName,
-          description: resData[key].description,
-          hourlyRate: resData[key].hourlyRate,
-          areas: resData[key].areas
-        };
-        coaches.push(coach);
-      }
-      ctx.commit('setCoaches', coaches);
+      // const res = await fetch(
+      //   'https://vue3-http-requests-default-rtdb.firebaseio.com/streams.json'
+      // );
+      // const resData = await res.json();
+      // if (!res.ok) {
+      //   // error ...
+      //   const error = new Error(resData.message || 'Failed to fetch!');
+      //   throw error;
+      // }
+      // const streams = [];
+      // for (const key in resData) {
+      //   const coach = {
+      //     id: key,
+      //     firstName: resData[key].firstName,
+      //     lastName: resData[key].lastName,
+      //     description: resData[key].description,
+      //     hourlyRate: resData[key].hourlyRate,
+      //     areas: resData[key].areas
+      //   };
+      //   streams.push(coach);
+      // }
+      // ctx.commit('setStreams', streams);
+      ctx.commit('setStreams');
       ctx.commit('setFetchTimestamp');
     }
   },
   getters: {
-    coaches(state) {
-      return state.coaches;
+    streams(state) {
+      return state.streams;
     },
-    hasCoaches(state) {
-      return state.coaches && state.coaches.length > 0;
+    hasStreams(state) {
+      return state.streams && state.streams.length > 0;
     },
-    coachById(state, coachId) {
-      return state.coaches.find(coach => coach.id === coachId);
+    coachById(state, streamId) {
+      return state.streams.find(stream => stream.id === streamId);
     },
     isCoach(_, getters, _2, rootGetters) {
-      const coaches = getters.coaches;
+      const streams = getters.streams;
       const userId = rootGetters.userId;
-      return coaches.some(coach => coach.id === userId);
+      return streams.some(coach => coach.id === userId);
     },
     shouldUpdate(state) {
       const lastFetch = state.lastFetch;
