@@ -1,10 +1,15 @@
 <template>
   <div>
     <section>
-       <base-video-card>
-        <video-player :options="videoOptions"></video-player>
-        <div class="chat"></div>
-      </base-video-card>
+      <div>
+
+      <div class="stream-container">
+          <video-player :options="videoOptions"></video-player>
+      </div>
+      <div class="chat" v-if="chatOpen">chatdiv
+        <button @click="collapseChat">Collapse Chat</button>
+      </div>
+      </div>
     </section>
     <section>
       <base-card>
@@ -35,13 +40,17 @@ export default {
   data() {
     return {
       selectedCoach: null,
-      formOpen: false,
+      chatOpen: true,
       email: '',
       message: '',
       formIsValid: true,
       videoOptions: {
-        height: "600%",
-        width: "1000%",
+        // height: "300%",
+        // width: "500%",
+        fluid: true,
+        // responsive: true,
+        // fill: true,
+        // aspectRatio: '9:16',
         autoplay: false,
         controls: true,
         sources: [{
@@ -94,6 +103,9 @@ export default {
     },
     hideButton() {
       this.formOpen = !this.formOpen;
+    },
+    collapseChat() {
+
     }
   },
   created() {
@@ -105,10 +117,23 @@ export default {
 </script>
 
 <style scoped>
+.stream-container {
+  /* margin-left: 0.5rem; */
+  /* height: 30%; */
+  width: 70%;
+  display: inline-block;
+  /* max-width: 70%; */
+}
 .chat {
-  height: 100%;
-  width: 33%;
-  background-color: #3d008d;
+  /* height: 75%; */
+  padding: 1rem;
+  /* margin-top: 0.5rem; */
+  border: 3px solid black;
+  width: 30%;
+  position: absolute;
+  /* float: right; */
+  /* background-color: #3d008d; */
+  display:inline-block;
 }
 form {
   margin: 1rem;
