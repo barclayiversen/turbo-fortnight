@@ -38,7 +38,7 @@ export default {
 header {
   width: 100%;
   height: 3.5rem;
-  background-color: #3d008d;
+  background-color: #44bd32;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,7 +46,7 @@ header {
 
 header a {
   text-decoration: none;
-  color: #f391e3;
+  color: #f5f6fa;
   display: inline-block;
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
