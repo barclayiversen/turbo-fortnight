@@ -1,4 +1,5 @@
 # TODO
 
-1. make video player div responsive 
-2. add chat collapse button
+1. implement chat collapse button
+2. wire up auth
+3. conditional styling for chat

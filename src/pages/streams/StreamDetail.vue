@@ -1,24 +1,45 @@
 <template>
   <div>
     <section>
-      <div>
-        <div class="stream-container">
+      <div class="main">
+        <div class="stream-container-partial">
           <video-player :options="videoOptions"></video-player>
         </div>
-        <div class="chat" v-if="chatOpen">
-          <h4>{{ streamerHandle }}'s chat</h4>
-          <ul>
-            <li v-for="message in messages" :key="message.id" :message="message.message" :user="message.user">{{ user }}: {{ message.message }}</li>
-          </ul>
-          <form @submit.prevent="submitForm">
-            <input type="text" v-model="message" placeholder="Send a message"/>
-          </form>
-          <button @click="collapseChat">Collapse Chat</button>
-          <button @click="submitForm" style="float: right">Send Message</button>
-          <!-- <button v-if="isLoggedIn" @click="submitForm" style="float: right"> -->
-            <!-- Send message -->
-          <!-- </button> -->
-          <!-- <p v-else style="float: right">Log in to chat!</p> -->
+        <div class="chat-container">
+          <div class="chat-header" v-if="chatOpen">
+            <h4>{{ streamerHandle }}'s chat</h4>
+          </div>
+          <div class="chat" v-if="chatOpen">
+            <ul>
+              <li
+                v-for="message in messages"
+                :key="message.id"
+                :message="message.message"
+                :user="message.user"
+              >
+                {{ user }}: {{ message.message }}
+              </li>
+            </ul>
+          </div>
+            <div class="message-container">
+              <form @submit.prevent="submitForm">
+                <input
+                  type="text"
+                  v-model="message"
+                  placeholder="Send a message"
+                />
+              </form>
+
+              <!-- <button @click="hideButton">Collapse Chat</button> -->
+              <!-- <button v-if="isLoggedIn" @click="submitForm" style="float: right"> -->
+              <!-- Send message -->
+              <!-- </button> -->
+              <!-- <p v-else style="float: right">Log in to chat!</p> -->
+
+              <button @click="submitForm" style="float: right">
+                Send Message
+              </button>
+            </div>
         </div>
       </div>
     </section>
@@ -50,7 +71,7 @@ export default {
   props: ['id'],
   data() {
     return {
-      user: "Spracto",
+      user: 'Spracto',
       selectedStreamer: null,
       chatOpen: true,
       message: '',
@@ -66,7 +87,7 @@ export default {
           },
         ],
       },
-      messages: []
+      messages: [],
     };
   },
   computed: {
@@ -95,20 +116,18 @@ export default {
   },
   methods: {
     submitForm() {
-      console.log(this.message)
+      console.log(this.message);
       this.formIsValid = true;
-      if (
-        this.message.trim === ''
-      ) {
+      if (this.message.trim() === '') {
         this.formIsValid = false;
         return;
       }
       const message = {
         message: this.message,
         user: this.user,
-        id: this.messages.length + 1
-      }
-      this.messages.push(message)
+        id: this.messages.length + 1,
+      };
+      this.messages.push(message);
       this.message = '';
       // this.$store.dispatch('requests/contactCoach', {
       //   email: this.email,
@@ -117,7 +136,9 @@ export default {
       // });
     },
     hideButton() {
-      this.formOpen = !this.formOpen;
+      if (this.chatOpen) {
+        this.chatOpen = !this.chatOpen;
+      }
     },
     collapseChat() {},
   },
@@ -131,19 +152,51 @@ export default {
 
 <style scoped>
 p {
-  margin: 0
+  margin: 0;
 }
-.stream-container {
+.stream-container-partial {
   width: 70%;
   display: inline-block;
 }
+.stream-container-full {
+  width: 100%;
+  /* display: inline-block; */
+}
+.main {
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+}
+.message-container {
+  display: flex;
+  min-height: 13vh;
+  max-height: 13vh;
+  width: 100%;
+
+}
+.chat-container {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  width: 30%;
+}
+.chat-header {
+  height: 7vh;
+  border: 2px solid black;
+  background-color: white;
+  display: inline-block;
+  /* position: absolute; */
+}
 .chat {
+  overflow: scroll;
+  min-height: 70vh;
+  max-height: 70vh;
   /* height: 75%; */
   padding: 1rem;
   /* margin-top: 0.5rem; */
   border: 3px solid black;
-  width: 30%;
-  position: absolute;
+  /* position:relative; */
   /* float: right; */
   /* background-color: #3d008d; */
   display: inline-block;
