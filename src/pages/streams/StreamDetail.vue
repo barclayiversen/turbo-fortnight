@@ -2,13 +2,24 @@
   <div>
     <section>
       <div>
-
-      <div class="stream-container">
+        <div class="stream-container">
           <video-player :options="videoOptions"></video-player>
-      </div>
-      <div class="chat" v-if="chatOpen">chatdiv
-        <button @click="collapseChat">Collapse Chat</button>
-      </div>
+        </div>
+        <div class="chat" v-if="chatOpen">
+          <h4>{{ streamerHandle }}'s chat</h4>
+          <ul>
+            <li v-for="message in messages" :key="message.id" :message="message.message" :user="message.user">{{ user }}: {{ message.message }}</li>
+          </ul>
+          <form @submit.prevent="submitForm">
+            <input type="text" v-model="message" placeholder="Send a message"/>
+          </form>
+          <button @click="collapseChat">Collapse Chat</button>
+          <button @click="submitForm" style="float: right">Send Message</button>
+          <!-- <button v-if="isLoggedIn" @click="submitForm" style="float: right"> -->
+            <!-- Send message -->
+          <!-- </button> -->
+          <!-- <p v-else style="float: right">Log in to chat!</p> -->
+        </div>
       </div>
     </section>
     <section>
@@ -30,41 +41,43 @@
 
 <script>
 import 'video.js/dist/video-js.css';
-import VideoPlayer from "@/components/streams/VideoPlayer.vue";
+import VideoPlayer from '@/components/streams/VideoPlayer.vue';
 
 export default {
   components: {
-    VideoPlayer
+    VideoPlayer,
   },
   props: ['id'],
   data() {
     return {
-      selectedCoach: null,
+      user: "Spracto",
+      selectedStreamer: null,
       chatOpen: true,
-      email: '',
       message: '',
       formIsValid: true,
       videoOptions: {
-        // height: "300%",
-        // width: "500%",
         fluid: true,
-        // responsive: true,
-        // fill: true,
-        // aspectRatio: '9:16',
         autoplay: false,
         controls: true,
-        sources: [{
-          src:
-            "http://localhost:8000/destiny2.mp4",
-          type: 
-            "video/mp4"
-        }]
-      }
+        sources: [
+          {
+            src: 'http://localhost:8000/destiny2.mp4',
+            type: 'video/mp4',
+          },
+        ],
+      },
+      messages: []
     };
   },
   computed: {
+    getChatMessages() {
+      return this.$store.getters.chatMessages;
+    },
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+    },
     streamerHandle() {
-      return this.selectedCoach.streamerHandle
+      return this.selectedCoach.streamerHandle;
     },
     streamName() {
       return this.selectedCoach.streamName;
@@ -72,12 +85,9 @@ export default {
     areas() {
       return this.selectedCoach.areas;
     },
-    rate() {
-      return this.selectedCoach.hourlyRate;
-    },
     description() {
       return this.selectedCoach.description;
-    }
+    },
     // contactLink() {
     //   // console.log('called contact', this.$route.path);
     //   // return this.$route.path + '/contact';
@@ -85,44 +95,47 @@ export default {
   },
   methods: {
     submitForm() {
+      console.log(this.message)
       this.formIsValid = true;
       if (
-        this.email === '' ||
-        !this.email.includes('@') ||
-        this.message === ''
+        this.message.trim === ''
       ) {
         this.formIsValid = false;
         return;
       }
-      this.$store.dispatch('requests/contactCoach', {
-        email: this.email,
+      const message = {
         message: this.message,
-        coachId: this.$route.params.id
-      });
-      this.$router.replace('/streams');
+        user: this.user,
+        id: this.messages.length + 1
+      }
+      this.messages.push(message)
+      this.message = '';
+      // this.$store.dispatch('requests/contactCoach', {
+      //   email: this.email,
+      //   message: this.message,
+      //   coachId: this.$route.params.id,
+      // });
     },
     hideButton() {
       this.formOpen = !this.formOpen;
     },
-    collapseChat() {
-
-    }
+    collapseChat() {},
   },
   created() {
     this.selectedCoach = this.$store.getters['streams/streams'].find(
-      coach => coach.id === this.id
+      (coach) => coach.id === this.id
     );
   },
 };
 </script>
 
 <style scoped>
+p {
+  margin: 0
+}
 .stream-container {
-  /* margin-left: 0.5rem; */
-  /* height: 30%; */
   width: 70%;
   display: inline-block;
-  /* max-width: 70%; */
 }
 .chat {
   /* height: 75%; */
@@ -133,7 +146,7 @@ export default {
   position: absolute;
   /* float: right; */
   /* background-color: #3d008d; */
-  display:inline-block;
+  display: inline-block;
 }
 form {
   margin: 1rem;
