@@ -51,6 +51,7 @@ export default {
       });
 
       const resData = await res.json();
+      console.log("resdata",resData)
       if (!res.ok) {
         if (mode === 'signup') {
           const error = new Error(
