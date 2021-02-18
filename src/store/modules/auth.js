@@ -62,7 +62,7 @@ export default {
           throw error;
         }
       }
-      console.log("resdat", resData)
+      // currently useless until backend updates are finished. 
       const expiresIn = +resData.expiresIn * 1000;
       const expirationDate = new Date().getTime() + expiresIn;
 
