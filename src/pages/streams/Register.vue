@@ -2,17 +2,17 @@
   <section>
     <base-card>
       <h2>Register As a coach now!</h2>
-      <coach-form @save-data="saveData"></coach-form>
+      <streamer-form @save-data="saveData"></streamer-form>
     </base-card>
   </section>
 </template>
 
 <script>
-import CoachForm from '../../components/streams/CoachForm.vue';
+import StreamerForm from '../../components/streams/StreamerForm.vue';
 export default {
   emits: [''],
   components: {
-    CoachForm
+    StreamerForm
   },
   methods: {
     saveData(data) {

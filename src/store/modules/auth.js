@@ -34,25 +34,27 @@ export default {
     async auth(ctx, payload) {
       const mode = payload.mode;
       let url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDE8bgaFDDcR-Kdpx5AgeF-in2le7F6d2E';
+          'http://localhost:3000/api/user/login';
 
       if (mode === 'signup') {
         url =
-          'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDE8bgaFDDcR-Kdpx5AgeF-in2le7F6d2E';
+        'http://localhost:3000/api/user/register';
       }
       const res = await fetch(url, {
         method: 'POST',
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
           email: payload.email,
           password: payload.password,
-          returnSecureToken: true
+          username: payload.username
         })
       });
+
       const resData = await res.json();
       if (!res.ok) {
         if (mode === 'signup') {
           const error = new Error(
-            resData.message || 'Failed to register, are you already signed up?'
+            resData[0].message || 'Failed to register, are you already signed up?'
           );
           throw error;
         } else {
@@ -60,6 +62,7 @@ export default {
           throw error;
         }
       }
+      console.log("resdat", resData)
       const expiresIn = +resData.expiresIn * 1000;
       const expirationDate = new Date().getTime() + expiresIn;
 

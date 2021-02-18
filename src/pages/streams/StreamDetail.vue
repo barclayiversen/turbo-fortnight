@@ -168,6 +168,7 @@ p {
   flex-direction: row;
 }
 .message-container {
+  
   display: flex;
   min-height: 13vh;
   max-height: 13vh;

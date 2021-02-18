@@ -8,13 +8,13 @@
     </base-dialog>
     <form @submit.prevent="submitForm">
       <base-card>
+        
         <div class="form-control">
           <label for="email"> Email </label>
           <input type="email" id="email" v-model.trim="email" />
         </div>
-        <p v-if="!formIsValid.email">
-          Please enter a valid email
-        </p>
+        <p v-if="!formIsValid.email">Please enter a valid email</p>
+
         <div class="form-control">
           <label for="password"> Password </label>
           <input type="password" id="password" v-model.trim="password" />
@@ -22,6 +22,15 @@
         <p v-if="!formIsValid.password">
           Please enter a valid password of at least 6 characters
         </p>
+        <div v-if="mode === 'signup'">
+          <div class="form-control">
+            <label for="username">
+              Pick a username. Must be alphanumeric.
+            </label>
+            <input type="username" id="username" v-model.trim="username" />
+          </div>
+          <p v-if="!formIsValid.username">Please enter a valid username</p>
+        </div>
         <base-button>{{ submitButtonCaption }}</base-button>
         <base-button type="button" mode="flat" @click="switchAuthMode">
           {{ switchModeButtonCaption }}
@@ -37,13 +46,14 @@ export default {
     return {
       email: '',
       password: '',
+      username: '',
       formIsValid: {
         email: true,
-        password: true
+        password: true,
       },
       mode: 'login',
       isLoading: false,
-      error: null
+      error: null,
     };
   },
   computed: {
@@ -60,7 +70,7 @@ export default {
       } else {
         return 'Login instead';
       }
-    }
+    },
   },
   methods: {
     async submitForm() {
@@ -75,10 +85,14 @@ export default {
       if (this.password.length < 6) {
         this.formIsValid.password = false;
       }
+      if (this.username.length < 1) {
+        this.formIsValid.username = false;
+      }
       this.isLoading = true;
       const actionPayload = {
         email: this.email,
-        password: this.password
+        password: this.password,
+        username: this.username
       };
 
       try {
@@ -92,7 +106,7 @@ export default {
         this.$router.replace(redirectUrl);
       } catch (error) {
         this.error = error.message || 'Failed to Authenticate';
-        console.log('hit error', error);
+        console.log('hit error1', error);
       }
 
       this.isLoading = false;
@@ -106,8 +120,8 @@ export default {
     },
     handleError() {
       this.error = false;
-    }
-  }
+    },
+  },
 };
 </script>
 
