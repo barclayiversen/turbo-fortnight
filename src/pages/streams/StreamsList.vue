@@ -13,14 +13,14 @@
             Refresh
           </base-button>
           <base-button v-if="!isLoggedIn" link to="/auth?redirect=register">
-            Login to register as a streamer
+            Login to start streaming!
           </base-button>
           <base-button
-            v-if="isLoggedIn && !isCoach && !isLoading"
+            v-if="isLoggedIn && !isLoading"
             link
             to="/register"
           >
-            Become a coach!
+            Go live!
           </base-button>
         </div>
         <div v-if="isLoading">

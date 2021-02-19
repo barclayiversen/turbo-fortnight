@@ -8,7 +8,6 @@
     </base-dialog>
     <form @submit.prevent="submitForm">
       <base-card>
-        
         <div class="form-control">
           <label for="email"> Email </label>
           <input type="email" id="email" v-model.trim="email" />
@@ -89,24 +88,28 @@ export default {
         this.formIsValid.username = false;
       }
       this.isLoading = true;
-      const actionPayload = {
-        email: this.email,
-        password: this.password,
-        username: this.username
-      };
 
       try {
         if (this.mode === 'login') {
+          const actionPayload = {
+            email: this.email,
+            password: this.password
+          };
           await this.$store.dispatch('login', actionPayload);
         } else {
+          const actionPayload = {
+            email: this.email,
+            password: this.password,
+            username: this.username,
+          };
           await this.$store.dispatch('signup', actionPayload);
         }
         console.log('redirect block');
-        const redirectUrl = '/' + (this.$route.query.redirect || 'coaches');
+        const redirectUrl = '/' + (this.$route.query.redirect || 'streams');
         this.$router.replace(redirectUrl);
       } catch (error) {
-        this.error = error.message || 'Failed to Authenticate';
         console.log('hit error1', error);
+        this.error = error.message || 'Failed to Authenticate';
       }
 
       this.isLoading = false;

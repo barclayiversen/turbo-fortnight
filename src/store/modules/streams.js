@@ -26,9 +26,12 @@ export default {
       state.streams.push(data);
     },
     setStreams(state, payload) {
+      try{
+        state, payload
+      }catch{
+        return;
+      }
       // state.streams = payload;
-      console.log("called setStreams", state, payload)
-
     },
     setFetchTimestamp(state) {
       state.lastFetch = new Date().getTime();
@@ -64,10 +67,9 @@ export default {
       });
     },
     async loadStreams(ctx, payload) {
-      console.log('loadstreams payload:', payload)
-      // if (!payload.forceRefresh && !ctx.getters.shouldUpdate) {
-      //   return;
-      // }
+      if (!payload.forceRefresh && !ctx.getters.shouldUpdate) {
+        return;
+      }
 
       // const res = await fetch(
       //   'https://vue3-http-requests-default-rtdb.firebaseio.com/streams.json'

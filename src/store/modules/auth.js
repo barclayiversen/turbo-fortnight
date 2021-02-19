@@ -59,21 +59,20 @@ export default {
           );
           throw error;
         } else {
-          const error = new Error(resData.message || 'Failed to authenticate');
+          const error = new Error(resData[0].message || 'Failed to authenticate');
           throw error;
         }
       }
-      // currently useless until backend updates are finished. 
-      const expiresIn = +resData.expiresIn * 1000;
-      const expirationDate = new Date().getTime() + expiresIn;
 
+      // const expiresIn = +resData.expiresIn * 1000;
+      // const expirationDate = new Date().getTime() + expiresIn;
       localStorage.setItem('token', resData.idToken);
       localStorage.setItem('userId', resData.localId);
-      localStorage.setItem('tokenExpiration', expirationDate);
-
+      localStorage.setItem('tokenExpiration', resData.expiresIn);
+      const logoutTimer = resData.expiresIn -  Math.floor(new Date().getTime());
       timer = setTimeout(() => {
         ctx.dispatch('autoLogout');
-      }, expiresIn);
+      }, logoutTimer);
 
       ctx.commit('setUser', {
         token: resData.idToken,
@@ -84,9 +83,7 @@ export default {
       const token = localStorage.getItem('token');
       const userId = localStorage.getItem('userId');
       const tokenExpiration = localStorage.getItem('tokenExpiration');
-
-      const expiresIn = +tokenExpiration - new Date().getTime();
-
+      const expiresIn = +tokenExpiration - Math.floor(new Date().getTime());
       if (expiresIn < 1000) {
         return;
       }
