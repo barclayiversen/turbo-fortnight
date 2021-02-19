@@ -2,7 +2,10 @@
   <div>
     <section>
       <div class="main">
-        <div class="stream-container-partial">
+        <div v-if="chatOpen" class="stream-container-partial">
+          <video-player :options="videoOptions"></video-player>
+        </div>
+        <div v-if="!chatOpen" class="stream-container-full">
           <video-player :options="videoOptions"></video-player>
         </div>
         <div class="chat-container">
@@ -21,7 +24,8 @@
               </li>
             </ul>
           </div>
-            <div class="message-container">
+          <div class="message-container">
+            <div v-if="chatOpen">
               <form @submit.prevent="submitForm">
                 <input
                   type="text"
@@ -29,17 +33,13 @@
                   placeholder="Send a message"
                 />
               </form>
-
-              <!-- <button @click="hideButton">Collapse Chat</button> -->
-              <!-- <button v-if="isLoggedIn" @click="submitForm" style="float: right"> -->
-              <!-- Send message -->
-              <!-- </button> -->
-              <!-- <p v-else style="float: right">Log in to chat!</p> -->
-
-              <button @click="submitForm" style="float: right">
-                Send Message
-              </button>
             </div>
+            <button @click="hideButton"> {{chatOpen ? "Collapse Chat" : "Expand Chat"}} </button>
+            <button v-if="isLoggedIn" @click="submitForm" style="float: right">
+              Send message
+            </button>
+            <p v-else style="float: right">Log in to chat!</p>
+          </div>
         </div>
       </div>
     </section>
@@ -71,7 +71,6 @@ export default {
   props: ['id'],
   data() {
     return {
-      user: 'Spracto',
       selectedStreamer: null,
       chatOpen: true,
       message: '',
@@ -91,6 +90,9 @@ export default {
     };
   },
   computed: {
+    user() {
+      return this.$store.getters.userId;
+    },
     getChatMessages() {
       return this.$store.getters.chatMessages;
     },
@@ -136,9 +138,7 @@ export default {
       // });
     },
     hideButton() {
-      if (this.chatOpen) {
-        this.chatOpen = !this.chatOpen;
-      }
+      this.chatOpen = !this.chatOpen;
     },
     collapseChat() {},
   },
@@ -160,7 +160,6 @@ p {
 }
 .stream-container-full {
   width: 100%;
-  /* display: inline-block; */
 }
 .main {
   margin: 0;
@@ -168,12 +167,10 @@ p {
   flex-direction: row;
 }
 .message-container {
-  
   display: flex;
   min-height: 13vh;
   max-height: 13vh;
   width: 100%;
-
 }
 .chat-container {
   margin: 0;
@@ -193,13 +190,8 @@ p {
   overflow: scroll;
   min-height: 70vh;
   max-height: 70vh;
-  /* height: 75%; */
   padding: 1rem;
-  /* margin-top: 0.5rem; */
   border: 3px solid black;
-  /* position:relative; */
-  /* float: right; */
-  /* background-color: #3d008d; */
   display: inline-block;
 }
 form {
