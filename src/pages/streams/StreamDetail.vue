@@ -2,10 +2,7 @@
   <div>
     <section>
       <div class="main">
-        <div v-if="chatOpen" class="stream-container-partial">
-          <video-player :options="videoOptions"></video-player>
-        </div>
-        <div v-if="!chatOpen" class="stream-container-full">
+        <div :class="[chatOpen ? 'stream-container-partial' : 'stream-container-full']">
           <video-player :options="videoOptions"></video-player>
         </div>
         <div class="chat-container">
@@ -63,6 +60,8 @@
 <script>
 import 'video.js/dist/video-js.css';
 import VideoPlayer from '@/components/streams/VideoPlayer.vue';
+import { io } from 'socket.io-client';
+var socket = null;
 
 export default {
   components: {
@@ -116,9 +115,13 @@ export default {
     //   // return this.$route.path + '/contact';
     // }
   },
+  sockets: {
+    connect() {
+      console.log('SOCKET connected')
+    }
+  },
   methods: {
     submitForm() {
-      console.log(this.message);
       this.formIsValid = true;
       if (this.message.trim() === '') {
         this.formIsValid = false;
@@ -129,6 +132,12 @@ export default {
         user: this.user,
         id: this.messages.length + 1,
       };
+      socket.emit('chat-message', {
+        message: this.message,
+        user: this.user,
+        room: this.id,
+        time: new Date().getTime()
+      });
       this.messages.push(message);
       this.message = '';
       // this.$store.dispatch('requests/contactCoach', {
@@ -143,10 +152,16 @@ export default {
     collapseChat() {},
   },
   created() {
+    socket = io('http://localhost:3000');
+    console.log(socket)
     this.selectedCoach = this.$store.getters['streams/streams'].find(
       (coach) => coach.id === this.id
     );
   },
+  unmounted() {
+    console.log("destroying")
+    socket.close();
+  }
 };
 </script>
 

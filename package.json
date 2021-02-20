@@ -9,8 +9,11 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "socket.io-client": "^3.1.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.1",
+    "vue-socket": "^0.2.3",
+    "vue-socket.io-extended": "^4.0.6",
     "vue-video-player": "^5.0.2",
     "vuex": "^4.0.0-rc.2"
   },

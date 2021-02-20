@@ -1,4 +1,7 @@
 import { createApp, defineAsyncComponent } from 'vue';
+// import VueSocketIOExt  from 'vue-socket.io-extended';
+// import VueSocketIO from 'vue-socket';
+// import { io } from 'socket.io-client';
 import router from './router.js';
 import store from './store/index.js';
 import App from './App.vue';
@@ -13,8 +16,10 @@ const BaseDialog = defineAsyncComponent(() =>
   import('./components/ui/BaseDialog.vue')
 );
 
+// const socket = io('http://localhost:3000');
 const app = createApp(App);
 
+// app.use(socket);
 app.use(store);
 app.use(router);
 app.component('base-button', BaseButton);
