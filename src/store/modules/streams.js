@@ -13,7 +13,7 @@ export default {
         },
         {
           id: 'c2',
-          streamerHandle: 'Harley The DJ',
+          streamerHandle: 'Harley_The_DJ',
           streamName: 'Dubstep dayz',
           areas: ['Music', 'Other'],
           description: 'Blasting the latest dubstep tunes'
@@ -104,7 +104,7 @@ export default {
     hasStreams(state) {
       return state.streams && state.streams.length > 0;
     },
-    coachById(state, streamId) {
+    streamById(state, streamId) {
       return state.streams.find(stream => stream.id === streamId);
     },
     isCoach(_, getters, _2, rootGetters) {

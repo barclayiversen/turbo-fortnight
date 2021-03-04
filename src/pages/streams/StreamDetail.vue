@@ -17,7 +17,7 @@
                 :message="message.message"
                 :user="message.user"
               >
-                {{ user }}: {{ message.message }}
+                {{ user }}: {{ message }}
               </li>
             </ul>
           </div>
@@ -99,27 +99,27 @@ export default {
       return this.$store.getters.isAuthenticated;
     },
     streamerHandle() {
-      return this.selectedCoach.streamerHandle;
+      return this.selectedStreamer.streamerHandle;
     },
     streamName() {
-      return this.selectedCoach.streamName;
+      return this.selectedStreamer.streamName;
     },
     areas() {
-      return this.selectedCoach.areas;
+      return this.selectedStreamer.areas;
     },
     description() {
-      return this.selectedCoach.description;
+      return this.selectedStreamer.description;
     },
     // contactLink() {
     //   // console.log('called contact', this.$route.path);
     //   // return this.$route.path + '/contact';
     // }
   },
-  sockets: {
-    connect() {
-      console.log('SOCKET connected')
-    }
-  },
+  // sockets: {
+  //   connect() {
+  //     console.log('SOCKET connected')
+  //   }
+  // },
   methods: {
     submitForm() {
       this.formIsValid = true;
@@ -138,7 +138,7 @@ export default {
         room: this.id,
         time: new Date().getTime()
       });
-      this.messages.push(message);
+      this.messages.push(message.message);
       this.message = '';
       // this.$store.dispatch('requests/contactCoach', {
       //   email: this.email,
@@ -153,10 +153,25 @@ export default {
   },
   created() {
     socket = io('http://localhost:3000');
-    console.log(socket)
-    this.selectedCoach = this.$store.getters['streams/streams'].find(
+    
+    this.selectedStreamer = this.$store.getters['streams/streams'].find(
       (coach) => coach.id === this.id
     );
+    socket.on('connect', () => {
+      socket.emit('room', {user: this.user ?? "Someone", room: this.selectedStreamer.streamerHandle})
+    })
+    socket.on('userjoin', (data) => {
+      console.log('incoming message', data)
+      this.messages.push(data.message)
+    })
+    // socket.emit('join', {user: this.user ?? "Someone", room: this.selectedStreamer.streamerHandle} , (res) => {
+    //   //server responds with number of users in chat, pushes name of user to chat box saying "user" joined
+    //   console.log(res);
+    // });
+  
+    // socket.on("join", (data) => {
+    //   console.log(data)
+    // });
   },
   unmounted() {
     console.log("destroying")
