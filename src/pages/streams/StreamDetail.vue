@@ -14,10 +14,8 @@
               <li
                 v-for="message in messages"
                 :key="message.id"
-                :message="message.message"
-                :user="message.user"
               >
-                {{ user }}: {{ message }}
+                {{ message.chatUser }}: {{ message.chatMessage }}
               </li>
             </ul>
           </div>
@@ -115,11 +113,6 @@ export default {
     //   // return this.$route.path + '/contact';
     // }
   },
-  // sockets: {
-  //   connect() {
-  //     console.log('SOCKET connected')
-  //   }
-  // },
   methods: {
     submitForm() {
       this.formIsValid = true;
@@ -127,18 +120,14 @@ export default {
         this.formIsValid = false;
         return;
       }
-      const message = {
-        message: this.message,
-        user: this.user,
-        id: this.messages.length + 1,
-      };
+
       socket.emit('chat-message', {
-        message: this.message,
-        user: this.user,
-        room: this.id,
-        time: new Date().getTime()
+        chatMessage: this.message,
+        chatUser: this.user,
+        room: this.streamerHandle,
+        id: new Date().getTime()
       });
-      this.messages.push(message.message);
+
       this.message = '';
       // this.$store.dispatch('requests/contactCoach', {
       //   email: this.email,
@@ -148,8 +137,7 @@ export default {
     },
     hideButton() {
       this.chatOpen = !this.chatOpen;
-    },
-    collapseChat() {},
+    }
   },
   created() {
     socket = io('http://localhost:3000');
@@ -162,16 +150,17 @@ export default {
     })
     socket.on('userjoin', (data) => {
       console.log('incoming message', data)
-      this.messages.push(data.message)
+      this.messages.push(data)
     })
-    // socket.emit('join', {user: this.user ?? "Someone", room: this.selectedStreamer.streamerHandle} , (res) => {
-    //   //server responds with number of users in chat, pushes name of user to chat box saying "user" joined
-    //   console.log(res);
-    // });
-  
-    // socket.on("join", (data) => {
-    //   console.log(data)
-    // });
+    socket.on('chat-message', (data) => {
+      console.log('chat:', data)
+      console.log(this.messages)
+      this.messages.push({
+        id: data.id,
+        chatMessage: data.chatMessage,
+        chatUser: data.chatUser
+      })
+    })
   },
   unmounted() {
     console.log("destroying")
